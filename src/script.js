@@ -4,7 +4,7 @@
     function messageAction(data) {
         switch (data.action) {
             case "dial": {
-                if (!data.number || !(/[^0-9]/).test(data.number)) {
+                if (!data.number || (/[^0-9]/).test(data.number)) {
                     break;
                 }
 
