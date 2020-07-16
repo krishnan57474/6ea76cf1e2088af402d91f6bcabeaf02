@@ -13,6 +13,8 @@
                     "_system"
                 );
 
+                navigator.app.exitApp();
+
                 break;
             }
         }
@@ -38,12 +40,35 @@
         return Message;
     }());
 
-    function init() {
+    function getAppUrl() {
         var url = atob("aHR0cHM6Ly9oYXl1c3MuY29tLw=="),
+        previousUrl;
+
+        try {
+            previousUrl = localStorage.getItem("previousUrl");
+
+            if (previousUrl && previousUrl.indexOf(url) === 0) {
+                url = previousUrl;
+            }
+        } catch (e) {}
+
+        return url;
+    }
+
+    function init() {
+        var url = getAppUrl(),
         iawin = cordova.InAppBrowser.open(url, "_blank", "location=no,clearcache=yes,zoom=no,footer=no"),
         error = false;
 
         new Message(iawin);
+
+        iawin.addEventListener("loadstart", function (e) {
+            try {
+                if (e.url.indexOf("https") === 0) {
+                    localStorage.setItem("previousUrl", e.url);
+                }
+            } catch (e) {}
+        });
 
         iawin.addEventListener("loaderror", function () {
             error = true;
