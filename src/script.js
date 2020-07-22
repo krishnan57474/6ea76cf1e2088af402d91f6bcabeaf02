@@ -17,6 +17,21 @@
 
                 break;
             }
+
+            case "whatsapp": {
+                if (!data.number || (/[^0-9]/).test(data.number)) {
+                    break;
+                }
+
+                cordova.InAppBrowser.open(
+                    "whatsapp://send?phone=" + data.number,
+                    "_system"
+                );
+
+                navigator.app.exitApp();
+
+                break;
+            }
         }
     }
 
